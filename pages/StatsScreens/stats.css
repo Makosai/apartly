@@ -1,0 +1,28 @@
+
+a{
+    color: inherit;
+}
+
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.report-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.summary-negative{
+    color: red;
+    font-weight: bold;
+}
+
+.summary-positive{
+    color: green;
+    font-weight: bold;
+
+}
+

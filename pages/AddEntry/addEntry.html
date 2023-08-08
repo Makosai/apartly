@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="./addEntry.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+    <title>UI-Boilerplate</title>
+  </head>
+
+  <body>
+    <!--============= This is Nav Bar ==================-->
+    <div class="mui-appbar nav mui--text-white">
+      <ul class="mui-list--inline">
+        <li class="mui--text-white">
+          <h3><a href="../Inputs/baseInputs.html">Inputs</a></h3>
+        </li>
+        <li class="mui--text-white">
+          <h3><a href="../ListScreens/listScreens.html">List Screen</a></h3>
+        </li>
+        <li class="mui--text-white">
+          <h3><a href="../StatsScreens/stats.html">Stats Screen</a></h3>
+        </li>
+        <li>
+          <h3>Add/Edit Screen</h3>
+        </li>
+        <li class="mui--text-white">
+          <h3><a href="../LoginPage/login.html">Login Screen</a></h3>
+        </li>
+      </ul>
+    </div>
+
+    <!--============= Page Content ==================-->
+    <div class="mui-container">
+      <h1 class="mui--text-center"><strong>Add/Edit Screens</strong></h1>
+
+      <div class="mui-panel">
+        <div>
+          <form class="mui-form" onsubmit="addItem()">
+            <legend>Add New Item</legend>
+            <div class="mui-textfield mui-textfield--float-label">
+              <input type="text" name="item-name" required />
+              <label>Item Name</label>
+            </div>
+            <div class="mui-textfield mui-textfield--float-label">
+              <input type="Number" name="item-quantity" required />
+              <label>Item Quantity</label>
+            </div>
+            <div class="mui-textfield mui-textfield--float-label">
+              <textarea name="item-description">Info about the item</textarea>
+              <label>Item Description</label>
+            </div>
+            <button type="submit" class="mui-btn mui-btn--raised">Add</button>
+          </form>
+        </div>
+        <div>
+          <table class="mui-table mui-table--bordered">
+            <thead>
+              <tr>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Description</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Item-1</td>
+                <td>3</td>
+                <td>This is the description</td>
+                <td>
+                  <button onclick="activateModal()">Edit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-------------This is the Modal Overlay Element--------------->
+      <div class="modal-container" id="edit-modal">
+        <form class="mui-form modal-content" onsubmit="editItem()">
+          <legend>Edit Item</legend>
+          <div class="mui-textfield mui-textfield--float-label">
+            <input type="text" name="item-name" value="Item-1" required />
+            <label>Item Name</label>
+          </div>
+          <div class="mui-textfield mui-textfield--float-label">
+            <input type="Number" name="item-quantity" value="3" required />
+            <label>Item Quantity</label>
+          </div>
+          <div class="mui-textfield mui-textfield--float-label">
+            <textarea name="item-description" value="This is the description">Info about the item</textarea>
+            <label>Item Description</label>
+          </div>
+          <button type="submit" class="mui-btn mui-btn--raised">Edit</button>
+        </form>
+      </div>
+      </div>
+    </div>
+    </div>
+    <script>
+      function addItem() {}
+
+      function activateModal() {
+        event.preventDefault()
+        const modalEl = document.getElementById("edit-modal")
+        modalEl.style.display="block"
+      }
+
+      function editItem() {
+        const modalEl = document.getElementById("edit-modal")
+        modalEl.style.display = "none"
+      }
+    </script>
+  </body>
+</html>

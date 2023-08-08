@@ -1,0 +1,29 @@
+
+a{
+    color: inherit;
+}
+
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content{
+    width: 100%;
+    margin-top: 2rem;
+
+}
+
+.date-range{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around 
+}
+
+.input-card{
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem;
+    padding: 0.5rem;
+}

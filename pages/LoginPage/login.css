@@ -1,0 +1,79 @@
+body {
+  height: 100%;
+  font-size: 14px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.login-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
+  padding: 40px 30px 40px 30px;
+  width: 350px;
+}
+
+.login-container-header {
+  font-size: 30px;
+  font-weight: 500;
+  text-align: center;
+  padding-bottom: 30px;
+}
+.login-container-sub-header {
+  padding-top: 10px;
+  font-size: 16px;
+  font-weight: normal;
+  color: #a4a1b8;
+}
+
+.login-container-label {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.login-container-forgot-password {
+  text-align: right;
+  padding-top: 10px;
+}
+
+a {
+  color: inherit;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container-sign-up {
+  text-align: center;
+  margin-top: 20px;
+  color: #a4a1b8;
+}
+.login-container-google {
+  width: 20px;
+  height: 20px;
+  vertical-align: inherit;
+  margin-right: 5px;
+}
+
+.mui-form {
+  margin-bottom: 0px;
+}
+
+.mui-btn {
+  width: 100%;
+  text-transform: none;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.mui-textfield {
+  width: 100%;
+  margin: 10px 0px 10px 0px;
+}

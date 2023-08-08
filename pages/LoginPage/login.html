@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="login.css" />
+
+    <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+  </head>
+  <body>
+    <!--============= This is Nav Bar ==================-->
+    <div class="mui-appbar nav mui--text-white">
+      <ul class="mui-list--inline">
+        <li class="mui--text-white">
+          <h3><a href="../Inputs/baseInputs.html">Inputs</a></h3>
+        </li>
+        <li class="mui--text-white">
+          <h3><a href="../ListScreens/listScreens.html">List Screen</a></h3>
+        </li>
+        <li class="mui--text-white">
+          <h3><a href="../StatsScreens/stats.html">Stats Screen</a></h3>
+        </li>
+        <li>
+          <h3><a href="../AddEntry/addEntry.html">Add/Edit Screen</a></h3>
+        </li>
+        <li class="mui--text-white">
+          <h3>Login Screen</h3>
+        </li>
+      </ul>
+    </div>
+
+    <!--============= Page Content ==================-->
+    <div class="login-container">
+      <div class="login-container-header">
+        Welcome Back 😊
+        <div class="login-container-sub-header">
+          Enter your credentials to access your account
+        </div>
+      </div>
+      <form class="mui-form">
+        <div class="login-container-label">Email Address</div>
+        <div class="mui-textfield">
+          <input type="email" placeholder="Enter your email" required />
+        </div>
+        <div class="login-container-label">Password</div>
+
+        <div class="mui-textfield">
+          <input type="password" placeholder="Enter your password" required />
+        </div>
+
+        <div class="login-container-forgot-password">
+          <a href="#">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="mui-btn mui-btn--raised mui-btn--primary">
+          Sign In
+        </button>
+      </form>
+      <button class="mui-btn mui-btn--raised">
+        <img
+          class="login-container-google"
+          src="https://img.icons8.com/color/48/null/google-logo.png"
+        />
+        Sign in with Google
+      </button>
+
+      <div class="login-container-sign-up">
+        Don't have an account? <a href="#">Sign up</a>
+      </div>
+    </div>
+  </body>
+</html>
