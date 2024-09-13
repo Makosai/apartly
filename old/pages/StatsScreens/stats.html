@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="./stats.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+    <title>UI-Boilerplate</title>
+  </head>
+
+  <body>
+    <!--============= This is Nav Bar ==================-->
+    <div class="mui-appbar nav mui--text-white">
+      <ul class="mui-list--inline">
+        <li class="mui--text-white">
+          <h3><a href="../Inputs/baseInputs.html">Inputs</a></h3>
+        </li>
+        <li class="mui--text-white">
+          <h3><a href="../ListScreens/listScreens.html">List Screen</a></h3>
+        </li>
+        <li class="mui--text-white">
+          <h3>Stats Screen</h3>
+        </li>
+        <li>
+          <h3><a href="../AddEntry/addEntry.html">Add/Edit Screen</a></h3>
+        </li>
+        <li class="mui--text-white">
+          <h3><a href="../LoginPage/login.html">Login Screen</a></h3>
+        </li>
+      </ul>
+    </div>
+
+    <!--============= Page Content ==================-->
+    <div class="mui-container">
+      <h1 class="mui--text-center"><strong>Stats Screens</strong></h1>
+
+      <div class="mui-panel">
+        <h4><strong>Food Delivery Summary</strong></h4>
+        <table class="mui-table mui-table--bordered">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Last 7 days</th>
+              <th>Previous 7 days</th>
+              <th>% Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Delivery Count</strong></td>
+              <td>1213</td>
+              <td>1113</td>
+              <td class="summary-positive">8.98%</td>
+            </tr>
+            <tr>
+              <td><strong>Before Time Delivery(%)</strong></td>
+              <td>96.07%</td>
+              <td>95.23%</td>
+              <td class="summary-positive">0.84%</td>
+            </tr>
+            <tr>
+              <td><strong>Billing Amount (USD)</strong></td>
+              <td>15,660</td>
+              <td>16,963</td>
+              <td class="summary-negative">-7.68%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mui-panel">
+        <span class="report-container">
+          <h4><strong>Food Delivery Report </strong></h4>
+          <h7> &nbsp; (Last 7 days)</h7>
+        </span>
+
+        <table class="mui-table mui-table--bordered">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Region</th>
+              <th>Delivery Count</th>
+              <th>Before Time Delivery(%)</th>
+              <th>Billing Amount (USD)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>UserA</td>
+              <td>North</td>
+              <td>125</td>
+              <td>99%</td>
+              <td>2,343</td>
+            </tr>
+            <tr>
+              <td>UserB</td>
+              <td>West</td>
+              <td>323</td>
+              <td>97.23%</td>
+              <td>6,343</td>
+            </tr>
+            <tr>
+              <td>UserC</td>
+              <td>North</td>
+              <td>242</td>
+              <td>96.69%</td>
+              <td>4,430</td>
+            </tr>
+            <tr>
+              <td>UserD</td>
+              <td>South</td>
+              <td>220</td>
+              <td>95.03%</td>
+              <td>1,212</td>
+            </tr>
+            <tr>
+              <td>UserE</td>
+              <td>East</td>
+              <td>303</td>
+              <td>94.12%</td>
+              <td>1,332</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
