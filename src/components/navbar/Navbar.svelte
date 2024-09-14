@@ -2,6 +2,9 @@
 	import { onMount } from 'svelte';
 	import Hamburger from './Hamburger.svelte';
 	import NavBrand from './NavBrand.svelte';
+	import NavItems from './NavItems.svelte';
+	import NavItemsMobile from './NavItemsMobile.svelte';
+	import NavActions from './NavActions.svelte';
 
 	let lastScroll = 0;
 	let turtle = false;
@@ -22,6 +25,9 @@
 <div class="navbar{turtleBar}">
 	<Hamburger />
 	<NavBrand />
+  <NavItems />
+  <NavItemsMobile />
+  <NavActions />
 </div>
 
 <style lang="postcss">

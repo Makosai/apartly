@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { navShown } from "$lib/stores";
-	import Icon from "@iconify/svelte";
+	import Icon, {loadIcons} from "@iconify/svelte";
+
+  loadIcons(["mdi:menu", "mdi-menu-close"]);
 </script>
 
 <button aria-label="Toggle Navbar" on:click={() => $navShown = !$navShown} class="hamburger">

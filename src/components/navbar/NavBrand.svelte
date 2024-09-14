@@ -14,7 +14,7 @@
 			sizes="(min-width: 768px) 84px, 92px"
 		/>
 	</div>
-	<div class="hidden lg:block h-11 mx-4 border-r-2 border-solid" />
+	<div class="hidden lg:block h-8 mx-4 border-r-2 border-solid" />
 	<div id="brand-name">{sitename}</div>
 </a>
 
@@ -29,6 +29,6 @@
 
 	#brand-name {
 		@apply flex justify-start items-center mr-10;
-		@apply hidden lg:block h3 ml-4;
+		@apply hidden ml:block h4 ml-4;
 	}
 </style>
