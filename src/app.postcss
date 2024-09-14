@@ -1,4 +1,6 @@
-@import url('css/colors.css');
+@import url('css/colors.postcss');
+@import url('css/buttons.postcss');
+@import url('css/texts.postcss');
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +8,7 @@
 @tailwind variants;
 
 html, body {
-  @apply h-full text-sm md:text-base lg:text-base xl:text-base 2xl:text-lg;
+  @apply h-full text-sm md:text-base lg:text-base xl:text-base 2xl:text-lg bg-gray-50;
 	font-family: 'Inter Variable', sans-serif;
+  overscroll-behavior-y: none;
 }
