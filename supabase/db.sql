@@ -34,7 +34,7 @@ with check (
 create table
   users (
     id uuid references auth.users on delete cascade primary key,
-    account_type acc_type default 'none',
+    account_type acc_type default 'none' not null,
     first_name text not null,
     last_name text not null
   );
@@ -43,6 +43,7 @@ create table
 alter table users enable row level security;
 
 -- Create a user as long as they're authenticated.
+-- DROP POLICY IF EXISTS user_create_policy ON public.users;
 create policy "user_create_policy"
 on users for insert
 to authenticated
@@ -51,7 +52,7 @@ with check ((select auth.uid()) = id);
 -- Account Type function & trigger
 create or replace
 function check_account_type_change ()
-returns trigger as $$
+returns trigger set search_path = '' as $$
 begin
     -- Allow changing from 'none' to any other account type.
     if old.account_type = acc_type.none then
@@ -73,14 +74,15 @@ before update on users for each row
 execute function check_account_type_change ();
 
 -- Allow everyone to read users.
+-- DROP POLICY IF EXISTS user_read_policy ON public.users;
 create policy "user_read_policy"
 on users for select
-to anon
 using (true);
 
 -- Allow users to change their first and last name.
 -- Also allow them to change from acc_type.none to any
 -- other role but never again.
+-- DROP POLICY IF EXISTS user_update_policy ON public.users;
 create policy "user_update_policy"
 on users for update
 to authenticated
@@ -117,7 +119,7 @@ using GIST (location);
 create or replace
 function nearby_apartments(lat float, long float)
 returns table (id public.apartments.id%TYPE, title public.apartments.title%TYPE, lat float, long float, dist_meters float)
-language sql
+language sql set search_path to public, gis
 as $$
   select
     id,
@@ -131,8 +133,7 @@ $$;
 
 create or replace function apartments_in_view(min_lat float, min_long float, max_lat float, max_long float)
 returns table (id public.apartments.id%TYPE, title public.apartments.title%TYPE, lat float, long float)
-language sql
-as $$
+language sql set search_path to public, gis as $$
 	select id, title, st_y(location::geometry) as lat, st_x(location::geometry) as long
 	from public.apartments
 	where location && ST_SetSRID(ST_MakeBox2D(ST_Point(min_long, min_lat), ST_Point(max_long, max_lat)), 4326)
@@ -185,7 +186,8 @@ using (false);
 -- Create a function to insert a new user into the users table using metadata
 create or replace function
 insert_new_user ()
-returns trigger as $$
+returns trigger security definer
+set search_path = '' as $$
 declare
     user_metadata jsonb;
 begin
