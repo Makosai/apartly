@@ -24,6 +24,10 @@
 
 	const toast = getToastStore();
 
+	/**
+	 * This function exists purely to just get rid of an issue where
+	 * onChange isn't called on autofill.
+	 */
 	function recheckValues() {
 		firstName = (document.getElementById('first-name') as HTMLInputElement).value;
 		lastName = (document.getElementById('last-name') as HTMLInputElement).value;
