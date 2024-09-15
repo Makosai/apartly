@@ -25,3 +25,11 @@ npm run build && node build
 ```
 
 You can pass a `HOST=127.0.0.1` and `PORT=80` if you want to change the IP and port.
+
+You can view `packages.json` for more scripts to run like:
+
+```sh
+npm run supa:link && npm run supa:gen
+```
+
+But that should already be up to date and committed.

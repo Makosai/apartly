@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { sitename } from '$lib/info';
 	import PageContainer from '$components/formats/PageContainer.svelte';
+
+	export let data;
+	const { supabase, session, user } = data;
 </script>
 
 <svelte:head>

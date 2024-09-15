@@ -12,7 +12,11 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "test:integration": "playwright test",
-    "test:unit": "vitest"
+    "test:unit": "vitest",
+    "supa:gen": "npx supabase gen types --lang=typescript --schema public --project-id \"wqyqougnnqwgqhjshpvz\" > ./src/lib/db/types/supabase.types.ts",
+    "supa:link": "npx supabase link --project-ref \"wqyqougnnqwgqhjshpvz\"",
+    "supa:pull": "npx supabase db pull",
+    "supa:push": "npx supabase db push"
   },
   "devDependencies": {
     "@iconify/svelte": "^4.0.2",
@@ -48,6 +52,7 @@
   "type": "module",
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",
+    "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.45.4"
   }
 }

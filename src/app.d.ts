@@ -7,3 +7,32 @@ declare namespace App {
 	// interface Error {}
 	// interface Platform {}
 }
+
+import type { Database } from '$lib/db/types/supabase.types';
+//#region Supabase
+import type { SupabaseClient, Session, User } from '@supabase/supabase-js';
+
+declare global {
+	namespace App {
+		interface Locals {
+			supabase: SupabaseClient;
+			safeGetSession(): Promise<{ session: Session | null; user: User | null }>;
+		}
+		interface PageData {
+			supabase: SupabaseClient<Database>;
+			session: Session | null;
+			user: User | null;
+		}
+		// interface Error {}
+		// interface Platform {}
+	}
+	
+	type InputElementEvent = Event & {
+		currentTarget: EventTarget & HTMLInputElement;
+	};
+
+	type SelectElementEvent = Event & {
+		currentTarget: EventTarget & HTMLSelectElement;
+	};
+}
+//#endregion
