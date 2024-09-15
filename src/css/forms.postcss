@@ -1,0 +1,30 @@
+.auth-form .title {
+  @apply text-4xl font-extrabold text-[--base-orange] opacity-80;
+}
+.auth-form .subtitle {
+  @apply text-sm font-light;
+}
+
+.form-group label {
+  @apply block text-sm opacity-75 text-gray-500 mt-2 mb-1;
+}
+
+form .form-group {
+  @apply mt-6;
+}
+.form-group fieldset {
+  @apply mt-2 flex gap-2 items-center;
+}
+.form-group fieldset label {
+  @apply font-normal opacity-100;
+}
+.form-group input {
+  @apply rounded-lg border-gray-400 border-opacity-50;
+  transition-property: border-color opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  border-width: 1.5px;
+}
+.form-group input:focus {
+  @apply border-blue-500 border-opacity-100;
+}

@@ -4,6 +4,7 @@
 
 <style lang="postcss">
 	.auth-form {
-		@apply bg-white p-8 rounded-lg shadow-sm;
+		@apply bg-white p-8 rounded-3xl shadow-xl max-w-[500px] mx-auto;
+    @apply flex flex-col justify-center items-center;
 	}
 </style>
