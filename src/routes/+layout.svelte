@@ -4,8 +4,12 @@
 	import Navbar from '$components/navbar/Navbar.svelte';
 	import Footer from '$components/navbar/Footer.svelte';
 	import { initializeStores, Toast } from '@skeletonlabs/skeleton';
+	import { setContext } from 'svelte';
 
 	initializeStores();
+
+	export let data;
+	setContext('data', data);
 </script>
 
 <Toast />

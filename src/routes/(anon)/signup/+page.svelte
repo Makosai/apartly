@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { loadIcons } from '@iconify/svelte';
 	import { page } from '$app/stores';
 	import { fade } from 'svelte/transition';
 	import { ProgressRadial, getToastStore } from '@skeletonlabs/skeleton';
@@ -21,6 +22,8 @@
 	let lastName: string | undefined;
 	let password: string | undefined;
 	let accountType: 'user' | 'realtor' | undefined;
+
+	loadIcons(['akar-icons:check']);
 
 	const toast = getToastStore();
 
@@ -110,7 +113,7 @@
 
 <PageContainer>
 	<AuthForm>
-		{#if !success}
+		{#if success}
 			<p class="title">{sitename}</p>
 			<!-- Subtitles -->
 			{#if accountType === 'user'}
@@ -179,6 +182,10 @@
 					</button>
 				</div>
 			</form>
+		{:else}
+			<div transition:fade>
+				<Icon icon="akar-icons:check" class="text-6xl text-green-500" />
+			</div>
 		{/if}
 	</AuthForm>
 </PageContainer>

@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { loadIcons } from '@iconify/svelte';
 	import Icon from '@iconify/svelte';
 	import { sitename } from '$lib/info';
+
+	loadIcons(['akar-icons:twitter-fill', 'akar-icons:facebook-fill', 'akar-icons:instagram-fill', 'akar-icons:linkedin-fill']);
 </script>
 
 <footer class="footer">

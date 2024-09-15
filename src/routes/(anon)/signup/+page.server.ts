@@ -12,7 +12,7 @@ export const load = async ({ locals: { safeGetSession } }) => {
 			case 'realtor':
 				return redirect(303, '/realtor');
 			case 'user':
-				return redirect(303, '/user');
+				return redirect(303, '/rent');
 			case 'none':
 			default:
 				return redirect(303, '/');
