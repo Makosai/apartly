@@ -21,7 +21,6 @@
 	.footer {
 		@apply bg-gray-800 text-white text-center py-4;
 		@apply w-full;
-		@apply fixed bottom-0;
 	}
 
 	.socials {

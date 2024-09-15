@@ -24,6 +24,7 @@
 
 <style lang="postcss">
 	.nav-container {
-		@apply pt-[72px] pb-[102px] h-max;
+		@apply pt-[72px] h-max;
+		min-height: calc(100% - 102px);
 	}
 </style>

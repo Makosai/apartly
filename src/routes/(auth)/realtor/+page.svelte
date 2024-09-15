@@ -1,3 +1,7 @@
+<script lang="ts">
+	import PageContainer from "$components/formats/PageContainer.svelte";
+
+</script>
 <!-- 
 
 Realtor Page
@@ -18,3 +22,7 @@ Realtor Page
 7. The delete button should delete the property after a confirmation dialog.
 
 -->
+
+<PageContainer>
+
+</PageContainer>

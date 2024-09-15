@@ -113,7 +113,7 @@
 
 <PageContainer>
 	<AuthForm>
-		{#if success}
+		{#if !success}
 			<p class="title">{sitename}</p>
 			<!-- Subtitles -->
 			{#if accountType === 'user'}
@@ -183,8 +183,22 @@
 				</div>
 			</form>
 		{:else}
-			<div transition:fade>
-				<Icon icon="akar-icons:check" class="text-6xl text-green-500" />
+			<div in:fade class="flex flex-col justify-center items-center gap-6">
+				<div class="rounded-full bg-green-500 p-4">
+					<Icon icon="akar-icons:check" class="text-6xl text-white" />
+				</div>
+
+				<p class="text-lg">Thank you for signing up!</p>
+
+				You're just a few steps away from using {sitename}. Click the button below to explore what
+				we have to offer.
+
+				<a
+					href={accountType === 'realtor' ? '/realtor' : accountType === 'user' ? '/user' : '/'}
+					class="btn-base-orange filled pill"
+				>
+					Let's get started
+				</a>
 			</div>
 		{/if}
 	</AuthForm>
