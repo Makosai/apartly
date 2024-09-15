@@ -3,7 +3,7 @@
 	import '@fontsource-variable/inter';
 	import Navbar from '$components/navbar/Navbar.svelte';
 	import Footer from '$components/navbar/Footer.svelte';
-	import { initializeStores, Toast } from '@skeletonlabs/skeleton';
+	import { initializeStores, Toast, Modal } from '@skeletonlabs/skeleton';
 	import { setContext } from 'svelte';
 
 	initializeStores();
@@ -13,6 +13,7 @@
 </script>
 
 <Toast />
+<Modal />
 
 <Navbar />
 

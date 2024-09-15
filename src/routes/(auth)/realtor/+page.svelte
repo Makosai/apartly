@@ -1,7 +1,25 @@
 <script lang="ts">
-	import PageContainer from "$components/formats/PageContainer.svelte";
+	import PageContainer from '$components/formats/PageContainer.svelte';
+	import ModalListingForm from '$components/forms/ModalListingForm.svelte';
+	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 
+	const modal = getModalStore();
+
+	const modalSettings: ModalSettings = {
+		type: 'component',
+		component: { ref: ModalListingForm },
+    title: 'Add Listing',
+    body: 'Fill out the form below to add a new listing.'
+	};
+
+	let listings = [];
+
+	function showListingForm() {
+		// Show the listing form modal.
+		modal.trigger(modalSettings);
+	}
 </script>
+
 <!-- 
 
 Realtor Page
@@ -24,5 +42,23 @@ Realtor Page
 -->
 
 <PageContainer>
-
+	<h1 class="title">Your Listings</h1>
+	<p class="subtitle">View & manage your listings.</p>
+	<div class="listing-container">
+		{#if listings.length === 0}
+			<div class="empty-listing">
+				<p class="text-center">You have no listings yet.</p>
+				<button class="btn-base-orange filled pill" on:click={showListingForm}>Add Listing</button>
+			</div>
+		{/if}
+	</div>
 </PageContainer>
+
+<style lang="postcss">
+	.listing-container {
+		@apply grid grid-cols-2 gap-4;
+	}
+	.empty-listing {
+		@apply col-span-2 flex flex-col justify-center items-center gap-4 min-h-[calc(100vh-300px)];
+	}
+</style>
