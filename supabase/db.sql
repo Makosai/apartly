@@ -189,12 +189,12 @@ returns trigger as $$
 declare
     user_metadata jsonb;
 begin
-    user_metadata := new.raw_user_metadata;
+    user_metadata := new.raw_user_meta_data;
 
     insert into public.users (id, account_type, first_name, last_name)
     values (
         new.id,
-        user_metadata->>'account_type',
+        (user_metadata->>'account_type')::public.acc_type,
         user_metadata->>'first_name',
         user_metadata->>'last_name'
     );
@@ -204,6 +204,6 @@ end;
 $$ language plpgsql;
 
 -- Create a trigger that calls the function after a new user is created in the auth.users table
-create trigger after_user_signup
+create or replace trigger after_user_signup
 after insert on auth.users for each row
 execute function insert_new_user ();
