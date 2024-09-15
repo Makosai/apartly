@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { sitename } from '$lib/info';
+	import { pageTitle } from '$lib/stores';
 	import PageContainer from '$components/formats/PageContainer.svelte';
 
 	export let data;
 	const { supabase, session, user } = data;
-</script>
 
-<svelte:head>
-	<title>{sitename} - Rent easy.</title>
-</svelte:head>
+	$pageTitle = `${sitename} - Rent easy.`;
+</script>
 
 <div class="hero">
 	<div class="hero-contents">
