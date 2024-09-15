@@ -2,16 +2,20 @@
 	import { getContext } from 'svelte';
 	import type { PageData } from '../../routes/$types';
 	import type { User } from '@supabase/supabase-js';
+	import SignoutButton from './SignoutButton.svelte';
 
 	const user: User = (getContext('data') as PageData).user;
 </script>
 
 <div class="nav-actions">
 	{#if user !== null && user.user_metadata.account_type === 'realtor'}
+		<SignoutButton />
 		<a href="/realtor" class="btn-base-orange filled pill">Listings</a>
 	{:else if user !== null && user.user_metadata.account_type === 'user'}
+		<SignoutButton />
 		<a href="/rent" class="btn-base-orange filled pill">Rent</a>
 	{:else}
+	<a href="/signin" class="btn-base-orange pill">Sign in</a>
 		<a href="/signup" class="btn-base-orange filled pill">Sign up</a>
 	{/if}
 </div>

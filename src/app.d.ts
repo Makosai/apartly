@@ -26,6 +26,10 @@ declare global {
 		// interface Error {}
 		// interface Platform {}
 	}
+
+	type FormElementEvent = Event & {
+		currentTarget: EventTarget & HTMLFormElement;
+	};
 	
 	type InputElementEvent = Event & {
 		currentTarget: EventTarget & HTMLInputElement;
