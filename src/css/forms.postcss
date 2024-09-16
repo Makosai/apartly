@@ -18,14 +18,14 @@ form .form-group {
 .form-group fieldset label {
   @apply font-normal opacity-100;
 }
-.form-group input {
+.form-group input, .form-group textarea {
   @apply rounded-lg border-gray-400 border-opacity-50;
   transition-property: border-color opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
   border-width: 1.5px;
 }
-.form-group input:focus {
+.form-group input:focus, .form-group textarea:focus {
   @apply border-blue-500 border-opacity-100;
 }
 
