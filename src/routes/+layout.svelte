@@ -4,18 +4,35 @@
 	import Navbar from '$components/navbar/Navbar.svelte';
 	import Footer from '$components/navbar/Footer.svelte';
 	import { initializeStores, Toast, Modal } from '@skeletonlabs/skeleton';
-	import { setContext } from 'svelte';
+	import { onMount } from 'svelte';
+	import { pageTitle } from '$lib/stores';
+	import { invalidate } from '$app/navigation';
+	import { supabase } from '$lib/supabaseClient';
 
 	initializeStores();
 
 	export let data;
-	setContext('data', data);
+	const { session } = data;
+
+	onMount(() => {
+		const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
+			if (newSession?.expires_at !== session?.expires_at) {
+				invalidate('supabase:auth');
+			}
+		});
+
+		return () => data.subscription.unsubscribe();
+	});
 </script>
+
+<svelte:head>
+	<title>{$pageTitle}</title>
+</svelte:head>
 
 <Toast />
 <Modal />
 
-<Navbar />
+<Navbar user={data.user} />
 
 <div class="nav-container">
 	<slot />

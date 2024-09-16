@@ -8,8 +8,8 @@
 	const modalSettings: ModalSettings = {
 		type: 'component',
 		component: { ref: ModalListingForm },
-    title: 'Add Listing',
-    body: 'Fill out the form below to add a new listing.'
+		title: 'Add Listing',
+		body: 'Fill out the form below to add a new listing.'
 	};
 
 	let listings = [];
@@ -18,6 +18,9 @@
 		// Show the listing form modal.
 		modal.trigger(modalSettings);
 	}
+
+	export let data;
+	const { user } = data;
 </script>
 
 <!-- 

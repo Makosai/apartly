@@ -2,14 +2,14 @@
 	import type { User } from '@supabase/supabase-js';
 	import SignoutButton from './SignoutButton.svelte';
 
-	export let user: User | null = null;
+	export let user: User | null;
 </script>
 
 <div class="nav-actions">
-	{#if user !== null && user.user_metadata.account_type === 'realtor'}
+	{#if user?.user_metadata.account_type === 'realtor'}
 		<SignoutButton />
 		<a href="/realtor" class="btn-base-orange filled pill">Listings</a>
-	{:else if user !== null && user.user_metadata.account_type === 'user'}
+	{:else if user?.user_metadata.account_type === 'user'}
 		<SignoutButton />
 		<a href="/rent" class="btn-base-orange filled pill">Rent</a>
 	{:else}
