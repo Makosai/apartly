@@ -28,3 +28,18 @@ form .form-group {
 .form-group input:focus {
   @apply border-blue-500 border-opacity-100;
 }
+
+input[type='radio'] {
+  @apply h-6 w-6 rounded-full;
+  @apply cursor-pointer;
+}
+input[type='radio'] + label {
+  @apply cursor-pointer;
+}
+input[type='radio']:focus {
+  @apply outline-none;
+  box-shadow: none;
+}
+p.form-footer {
+  @apply text-center mt-6;
+}

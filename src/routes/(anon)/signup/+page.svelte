@@ -121,25 +121,25 @@
 			{:else if accountType === 'realtor'}
 				<p class="subtitle">Sign up and start listing today.</p>
 			{:else}
-				<p class="subtitle">Sign and start using {sitename} today.</p>
+				<p class="subtitle">Sign up and start using {sitename} today.</p>
 			{/if}
 
 			<!-- Form -->
 			<form on:submit|preventDefault={signup} id="signup">
 				<div class="form-group">
 					<label for="first-name">First name</label>
-					<input type="text" id="first-name" on:input={setFirstName} required />
+					<input type="text" id="first-name" on:input={setFirstName} bind:value={firstName} required />
 
 					<label for="last-name">Last name</label>
-					<input type="text" id="last-name" on:input={setLastName} required />
+					<input type="text" id="last-name" on:input={setLastName} bind:value={lastName} required />
 				</div>
 
 				<div class="form-group">
 					<label for="email">Email</label>
-					<input type="email" id="email" on:input={setEmail} required />
+					<input type="email" id="email" on:input={setEmail} bind:value={email} required />
 
 					<label for="password">Password</label>
-					<input type="password" id="password" on:input={setPassword} required />
+					<input type="password" id="password" on:input={setPassword} bind:value={password} required />
 				</div>
 
 				<div class="form-group flex-center flex-col">
@@ -182,6 +182,10 @@
 					</button>
 				</div>
 			</form>
+
+			<p class="form-footer">
+				Already have an account? <a href="/signin" class="text-base-orange">Sign in</a>
+			</p>
 		{:else}
 			<div in:fade class="flex flex-col justify-center items-center gap-6">
 				<div class="rounded-full bg-green-500 p-4">
@@ -203,18 +207,3 @@
 		{/if}
 	</AuthForm>
 </PageContainer>
-
-<style lang="postcss">
-	input[type='radio'] {
-		@apply h-6 w-6 rounded-full;
-		@apply cursor-pointer;
-	}
-	input[type='radio'] + label {
-		@apply cursor-pointer;
-	}
-
-	input[type='radio']:focus {
-		@apply outline-none;
-		box-shadow: none;
-	}
-</style>
