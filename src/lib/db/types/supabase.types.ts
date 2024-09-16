@@ -52,19 +52,19 @@ export type Database = {
       }
       users: {
         Row: {
-          account_type: Database["public"]["Enums"]["acc_type"] | null
+          account_type: Database["public"]["Enums"]["acc_type"]
           first_name: string
           id: string
           last_name: string
         }
         Insert: {
-          account_type?: Database["public"]["Enums"]["acc_type"] | null
+          account_type?: Database["public"]["Enums"]["acc_type"]
           first_name: string
           id: string
           last_name: string
         }
         Update: {
-          account_type?: Database["public"]["Enums"]["acc_type"] | null
+          account_type?: Database["public"]["Enums"]["acc_type"]
           first_name?: string
           id?: string
           last_name?: string
