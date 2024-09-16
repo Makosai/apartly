@@ -34,7 +34,7 @@
 </script>
 
 <form on:submit={confirm} method="post" action="/?/signout" use:enhance={handleSignOut}>
-	<button type="submit" class="btn-base-orange pill"
-		>{confirmation ? 'Are you sure?' : 'Logout'}</button
-	>
+	<button type="submit" class="btn-base-orange pill">
+		{confirmation ? 'Are you sure?' : 'Logout'}
+	</button>
 </form>

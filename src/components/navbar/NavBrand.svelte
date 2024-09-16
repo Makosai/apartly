@@ -1,11 +1,8 @@
 <script lang="ts">
 	import { sitename } from '$lib/info';
-	import { navShown } from '$lib/stores';
-
-	$: hideNav = () => ($navShown = false);
 </script>
 
-<a href="/" id="brand" class="un-a" on:click={hideNav}>
+<a href="/" id="brand" class="un-a">
 	<div id="brand-logo">
 		<enhanced:img
 			src="$assets/logos/appartly_logo.png?enhanced&w=184;168"

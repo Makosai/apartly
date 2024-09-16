@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import type { PageData } from '../../routes/$types';
 	import type { User } from '@supabase/supabase-js';
 	import SignoutButton from './SignoutButton.svelte';
 
-	const user: User = (getContext('data') as PageData).user;
+	export let user: User | null = null;
 </script>
 
 <div class="nav-actions">
@@ -22,6 +20,6 @@
 
 <style lang="postcss">
 	.nav-actions {
-		@apply hidden ml:flex justify-center items-center gap-4 ml-auto;
+		@apply flex justify-center items-center gap-4 ml-auto;
 	}
 </style>
