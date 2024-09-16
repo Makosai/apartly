@@ -35,7 +35,7 @@ Realtor Page
 		{#if listings.length === 0}
 			<div class="empty-listing">
 				<p class="text-center">You have no listings yet.</p>
-				<a href="./add" class="btn-base-orange filled pill">Add Listing</a>
+				<a href="/realtor/add" class="btn-base-orange filled pill">Add Listing</a>
 			</div>
 		{/if}
 	</div>
