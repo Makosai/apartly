@@ -62,7 +62,7 @@
 				goto('/realtor');
 			} else if (data.user.user_metadata.account_type === 'user') {
 				accountType = 'user';
-				goto('/user');
+				goto('/rent');
 			} else {
 				accountType = undefined;
 				goto('/');
@@ -105,7 +105,13 @@
 					<input type="email" id="email" on:input={setEmail} bind:value={email} required />
 
 					<label for="password">Password</label>
-					<input type="password" id="password" on:input={setPassword} bind:value={password} required />
+					<input
+						type="password"
+						id="password"
+						on:input={setPassword}
+						bind:value={password}
+						required
+					/>
 				</div>
 
 				<div class="form-group flex-center">
@@ -136,7 +142,7 @@
 				We're redirecting you now. If you're not redirected in 5 seconds, click the button below.
 
 				<a
-					href={accountType === 'realtor' ? '/realtor' : accountType === 'user' ? '/user' : '/'}
+					href={accountType === 'realtor' ? '/realtor' : accountType === 'user' ? '/rent' : '/'}
 					class="btn-base-orange filled pill"
 				>
 					Let's get started

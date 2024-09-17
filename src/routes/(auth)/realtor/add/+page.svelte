@@ -4,19 +4,26 @@
 	import { FileButton, getToastStore } from '@skeletonlabs/skeleton';
 	import Map from '$components/map/Map.svelte';
 
+	export let data;
+	const { user } = data;
+
 	const toast = getToastStore();
 
 	let files: FileList | undefined;
 
 	async function submitForm(e: Event) {
 		e.preventDefault();
+
+		if(!user) return; // The should be set anyways. This page redirects them automatically if not.
+
 		const form = e.target as HTMLFormElement;
 		const formData = new FormData(form);
 		const data = Object.fromEntries(formData.entries());
 
+		// supabase.storage.from('apartments_images').upload(`/${user.id}/${files[0].name}`, files[0]);
+
 		const { error } = await supabase.from('apartments').insert({
 			title: data.title,
-			preview_image_url: data.preview_image_url,
 			description: data.description,
 			sq_footage: data.sq_footage,
 			rooms: data.rooms,
@@ -45,30 +52,41 @@
 	<p class="subtitle">Add a new listing.</p>
 
 	<div class="flex justify-center items-center">
-		<form class="form-container" on:submit|preventDefault={submitForm}>
+		<form
+			class="form-container"
+			on:submit|preventDefault={submitForm}
+			on:invalid={() => console.log('hi')}
+		>
 			<div class="form-group">
 				<label for="title">Title</label>
 				<input type="text" id="title" required />
 			</div>
 
-			<div class="form-group col-span-2">
+			<div class="form-group md:col-span-2">
 				<label for="description">Description</label>
 				<textarea id="description" required></textarea>
 			</div>
 
 			<div class="form-group">
 				<label for="sq-footage">Square Footage</label>
-				<input type="number" id="sq-footage" required />
+				<input type="number" id="sq-footage" placeholder="5" step="1" required pattern="[0-9]+" /> sq/ft
 			</div>
 
 			<div class="form-group">
 				<label for="rooms">Number of Rooms</label>
-				<input type="number" id="rooms" required />
+				<input type="number" id="rooms" placeholder="5" step="1" required pattern="[0-9]+" /> rooms
 			</div>
 
 			<div class="form-group">
 				<label for="price-per-month">Price Per Month</label>
-				<input type="number" id="price-per-month" required />
+				$<input
+					type="number"
+					id="price-per-month"
+					placeholder="800.00"
+					step="0.01"
+					required
+					pattern=/(?:^[1-9]([0-9]+)?(?:\.[0-9]\{1,2})?$)|(?:^(?:0)$)|(?:^[0-9]\.[0-9](?:[0-9])?$)/
+				/> USD
 			</div>
 
 			<div class="form-group">
@@ -87,11 +105,15 @@
 				<FileButton id="preview-image-url" name="preview_image_url" bind:files required />
 			</div>
 
-			<div class="form-group col-span-2">
+			<div class="form-group md:col-span-2">
 				<label for="location">Location</label>
 				<div class="w-full h-[300px]">
 					<Map />
 				</div>
+			</div>
+
+			<div class="form-group">
+				<button type="submit" class="btn-base-orange filled pill">Finish Posting Listing</button>
 			</div>
 		</form>
 	</div>
@@ -99,7 +121,7 @@
 
 <style lang="postcss">
 	.form-container {
-		@apply grid grid-cols-2 md:grid-cols-1 md:grid-rows-none gap-x-10 gap-y-4;
+		@apply grid w-full grid-cols-1 md:grid-cols-2 md:grid-rows-none gap-x-10 gap-y-0 	md:gap-y-4;
 	}
 
 	.form-container textarea {

@@ -1,7 +1,8 @@
 import { redirect } from '@sveltejs/kit';
+import type { LayoutServerLoad } from '../../$types';
 
-export const load = async ({ locals: { safeGetSession } }) => {
-	const { user } = await safeGetSession();
+export const load: LayoutServerLoad = async ({ locals: { safeGetSession } }) => {
+	const { session, user } = await safeGetSession();
 
 	if (user) {
 		if (!Object.keys(user.user_metadata).includes('account_type')) {
@@ -11,13 +12,15 @@ export const load = async ({ locals: { safeGetSession } }) => {
 		switch (user.user_metadata.account_type) {
 			case 'realtor':
 				return redirect(303, '/realtor');
-			case 'user':
-				return redirect(303, '/rent');
 			case 'none':
-			default:
 				return redirect(303, '/');
 		}
+	} else {
+		redirect(303, '/signin');
 	}
 
-	return { user };
+	return {
+		session,
+		user
+	};
 };

@@ -8,6 +8,7 @@
 	import { pageTitle } from '$lib/stores.js';
 	import AuthForm from '$components/formats/AuthForm.svelte';
 	import PageContainer from '$components/formats/PageContainer.svelte';
+	import { onMount } from 'svelte';
 
 	export let data;
 	const { supabase } = data;
@@ -26,6 +27,10 @@
 	loadIcons(['akar-icons:check']);
 
 	const toast = getToastStore();
+
+	if ($page.data.acct_type) {
+		accountType = $page.data.acct_type;
+	}
 
 	/**
 	 * This function exists purely to just get rid of an issue where
@@ -128,7 +133,13 @@
 			<form on:submit|preventDefault={signup} id="signup">
 				<div class="form-group">
 					<label for="first-name">First name</label>
-					<input type="text" id="first-name" on:input={setFirstName} bind:value={firstName} required />
+					<input
+						type="text"
+						id="first-name"
+						on:input={setFirstName}
+						bind:value={firstName}
+						required
+					/>
 
 					<label for="last-name">Last name</label>
 					<input type="text" id="last-name" on:input={setLastName} bind:value={lastName} required />
@@ -139,7 +150,13 @@
 					<input type="email" id="email" on:input={setEmail} bind:value={email} required />
 
 					<label for="password">Password</label>
-					<input type="password" id="password" on:input={setPassword} bind:value={password} required />
+					<input
+						type="password"
+						id="password"
+						on:input={setPassword}
+						bind:value={password}
+						required
+					/>
 				</div>
 
 				<div class="form-group flex-center flex-col">
@@ -150,6 +167,7 @@
 							id="user"
 							name="account_type"
 							value="user"
+							checked={accountType === 'user'}
 							on:change={setAccountType}
 							required
 						/>
@@ -160,6 +178,7 @@
 							id="realtor"
 							name="account_type"
 							value="realtor"
+							checked={accountType === 'realtor'}
 							on:change={setAccountType}
 							required
 						/>
@@ -198,7 +217,7 @@
 				we have to offer.
 
 				<a
-					href={accountType === 'realtor' ? '/realtor' : accountType === 'user' ? '/user' : '/'}
+					href={accountType === 'realtor' ? '/realtor' : accountType === 'user' ? '/rent' : '/'}
 					class="btn-base-orange filled pill"
 				>
 					Let's get started
