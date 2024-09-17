@@ -1,17 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import PageContainer from '$components/formats/PageContainer.svelte';
-	import { supabase } from '$lib/supabaseClient';
 	import { FileButton, getToastStore } from '@skeletonlabs/skeleton';
 	import Map, { type Selection } from '$components/map/Map.svelte';
 
 	export let data;
-	const { user } = data;
-
-	let selection: Selection | undefined;
-
+	const { supabase, user } = data;
 	const toast = getToastStore();
 
+	let submitting = false;
+	let selection: Selection | undefined;
 	let files: FileList | undefined;
 
 	function validateForm(formData: FormData): boolean {
@@ -126,26 +124,69 @@
 	}
 
 	async function submitForm(e: Event) {
-		e.preventDefault();
+		try {
+			submitting = true;
 
-		if (!user) return; // The should be set anyways. This page redirects them automatically if not.
+			e.preventDefault();
 
-		const form = e.target as HTMLFormElement;
-		const formData = new FormData(form);
-		if (selection) {
-			formData.append('location', `POINT(${selection.y} ${selection.x})`);
-			formData.append('location_label', selection.label);
-		}
-		const data = Object.fromEntries(formData.entries());
-		console.log(data.sq_footage);
+			if (!user) return; // The should be set anyways. This page redirects them automatically if not.
 
-		if (!validateForm(formData)) return;
-		if (!files || files.length > 0) return; // Handled in validateForm, this just shuts up JS.
+			const form = e.target as HTMLFormElement;
+			const formData = new FormData(form);
+			if (selection) {
+				formData.append('location', `POINT(${selection.y} ${selection.x})`);
+				formData.append('location_label', selection.label);
+			}
+			const data = Object.fromEntries(formData.entries());
 
-		{
-			const { error, data } = await supabase.storage
-				.from('apartments_images')
-				.upload(`/${user.id}/preview`, files[0]);
+			if (!validateForm(formData)) return;
+			if (!files || files.length <= 0) return; // Handled in validateForm, this just shuts up JS.
+
+			const file = files.item(0);
+			if (file === null) return;
+			const fileType = file.type.split('/')[1];
+
+			if (fileType !== 'png' && fileType !== 'jpeg' && fileType !== 'jpg') {
+				toast.trigger({
+					message: 'Preview image must be a PNG or JPEG file.',
+					timeout: 2000,
+					background: 'variant-filled-warning'
+				});
+				return;
+			}
+
+			{
+				const { error, data } = await supabase.storage
+					.from('apartments_images')
+					.upload(`/${user.id}/preview.${fileType}`, file, {
+						cacheControl: '3600',
+						upsert: true
+					});
+
+				if (error) {
+					toast.trigger({
+						message: error.message,
+						timeout: 2000,
+						background: 'variant-filled-warning'
+					});
+					return;
+				}
+
+				if (data) {
+					console.log(data);
+				}
+			}
+
+			const { error } = await supabase.from('apartments').insert({
+				owner_id: user.id,
+				title: data.title,
+				description: data.description,
+				sq_footage: data.sq_footage,
+				rooms: data.rooms,
+				monthly_price: data.price_per_month,
+				location: data.location,
+				location_label: data.location_label
+			});
 
 			if (error) {
 				toast.trigger({
@@ -153,39 +194,19 @@
 					timeout: 2000,
 					background: 'variant-filled-warning'
 				});
-				return;
+			} else {
+				toast.trigger({
+					message: 'Listing added successfully!',
+					timeout: 2000,
+					background: 'variant-filled-success'
+				});
+
+				goto('/realtor');
 			}
-
-			if (data) {
-				console.log(data);
-			}
-		}
-
-		const { error } = await supabase.from('apartments').insert({
-			owner_id: user.id,
-			title: data.title,
-			description: data.description,
-			sq_footage: data.sq_footage,
-			rooms: data.rooms,
-			monthly_price: data.price_per_month,
-			location: data.location,
-			location_label: data.location_label
-		});
-
-		if (error) {
-			toast.trigger({
-				message: error.message,
-				timeout: 2000,
-				background: 'variant-filled-warning'
-			});
-		} else {
-			toast.trigger({
-				message: 'Listing added successfully!',
-				timeout: 2000,
-				background: 'variant-filled-success'
-			});
-
-			goto('/realtor');
+		} catch (error) {
+			console.error(error);
+		} finally {
+			submitting = false;
 		}
 	}
 </script>
@@ -263,7 +284,12 @@
 						/>
 					</p>
 				{/if}
-				<FileButton id="preview-image-url" name="preview_image_url" bind:files />
+				<FileButton
+					id="preview-image-url"
+					name="preview_image_url"
+					bind:files
+					accept="image/png|image/jpeg"
+				/>
 			</div>
 
 			<div class="form-group md:col-span-2">
@@ -276,7 +302,9 @@
 			</div>
 
 			<div class="form-group">
-				<button type="submit" class="btn-base-orange filled pill">Finish Posting Listing</button>
+				<button type="submit" class="btn-base-orange filled pill">
+					{submitting ? 'Adding Your Listing...' : 'Finish Posting Listing'}
+				</button>
 			</div>
 		</form>
 	</div>
