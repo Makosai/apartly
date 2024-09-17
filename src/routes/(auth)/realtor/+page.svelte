@@ -1,33 +1,25 @@
 <script lang="ts">
+	import FloatingButton from '$components/formats/FloatingButton.svelte';
+	import Listing from '$components/formats/Listing.svelte';
 	import PageContainer from '$components/formats/PageContainer.svelte';
-	import { getPreviewUrl } from '$lib/info.js';
-	import { supabase } from '$lib/supabaseClient';
 	import { ProgressBar } from '@skeletonlabs/skeleton';
 
-	type Listing = {
-		id: string;
-		owner_id: string;
-		title: string;
-		description: string;
-		sq_footage: number;
-		rooms: number;
-		monthly_price: number;
-		image_url: string;
-		location: string;
-		location_label: string;
-	};
-	let listings: Listing[] | undefined;
+	let listings: ListingData[] | undefined;
 
 	export let data;
-	const { user } = data;
+	const { supabase, user } = data;
 
-	supabase.from('apartments').select().eq('owner_id', user.id).then(({ data, error }) => {
-		if (error) {
-			console.error(error);
-			return;
-		}
-		listings = data;
-	});
+	supabase
+		.from('apartments')
+		.select()
+		.eq('owner_id', user.id)
+		.then(({ data, error }) => {
+			if (error) {
+				console.error(error);
+				return;
+			}
+			listings = data;
+		});
 </script>
 
 <!-- 
@@ -51,6 +43,8 @@ Realtor Page
 
 -->
 
+<FloatingButton href="/realtor/add" />
+
 <PageContainer>
 	<h1 class="title">Your Listings</h1>
 	<p class="subtitle">View & manage your listings.</p>
@@ -66,19 +60,7 @@ Realtor Page
 			</div>
 		{:else}
 			{#each listings as listing}
-				<div class="card">
-					<img src={getPreviewUrl(listing.owner_id)} alt={listing.name} />
-					<h2>{listing.title}</h2>
-					<p>{listing.description}</p>
-					<p>{listing.sq_footage} sq. ft.</p>
-					<p>{listing.rooms} rooms</p>
-					<p>${listing.monthly_price}/month</p>
-					<p>{listing.location_label}</p>
-					<div class="flex justify-between">
-						<a href="/realtor/edit/{listing.id}" class="btn-base-orange filled">Edit</a>
-						<button class="btn-base-red filled">Delete</button>
-					</div>
-				</div>
+				<Listing {listing} />
 			{/each}
 		{/if}
 	</div>

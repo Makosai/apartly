@@ -30,13 +30,25 @@ declare global {
 	type FormElementEvent = Event & {
 		currentTarget: EventTarget & HTMLFormElement;
 	};
-	
+
 	type InputElementEvent = Event & {
 		currentTarget: EventTarget & HTMLInputElement;
 	};
 
 	type SelectElementEvent = Event & {
 		currentTarget: EventTarget & HTMLSelectElement;
+	};
+
+	type ListingData = {
+		id: number;
+		owner_id: string;
+		title: string;
+		description: string;
+		sq_footage: number;
+		rooms: number;
+		monthly_price: number;
+		location: unknown;
+		location_label: string;
 	};
 }
 //#endregion
