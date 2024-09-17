@@ -14,6 +14,7 @@ export type Database = {
           description: string
           id: number
           location: unknown
+          location_label: string
           monthly_price: number
           owner_id: string
           rooms: number
@@ -24,6 +25,7 @@ export type Database = {
           description: string
           id?: number
           location: unknown
+          location_label: string
           monthly_price: number
           owner_id: string
           rooms: number
@@ -34,6 +36,7 @@ export type Database = {
           description?: string
           id?: number
           location?: unknown
+          location_label?: string
           monthly_price?: number
           owner_id?: string
           rooms?: number
