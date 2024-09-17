@@ -158,7 +158,7 @@
 			{
 				const { error, data } = await supabase.storage
 					.from('apartments_images')
-					.upload(`/${user.id}/preview.${fileType}`, file, {
+					.upload(`/${user.id}/preview`, file, {
 						cacheControl: '3600',
 						upsert: true
 					});
@@ -179,13 +179,13 @@
 
 			const { error } = await supabase.from('apartments').insert({
 				owner_id: user.id,
-				title: data.title,
-				description: data.description,
-				sq_footage: data.sq_footage,
-				rooms: data.rooms,
-				monthly_price: data.price_per_month,
-				location: data.location,
-				location_label: data.location_label
+				title: data.title as string,
+				description: data.description as string,
+				sq_footage: Number(data.sq_footage as string),
+				rooms: Number(data.rooms as string),
+				monthly_price: Number(data.price_per_month as string),
+				location: data.location as string,
+				location_label: data.location_label as string
 			});
 
 			if (error) {

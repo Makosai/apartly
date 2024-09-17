@@ -1,10 +1,33 @@
 <script lang="ts">
 	import PageContainer from '$components/formats/PageContainer.svelte';
+	import { getPreviewUrl } from '$lib/info.js';
+	import { supabase } from '$lib/supabaseClient';
+	import { ProgressBar } from '@skeletonlabs/skeleton';
 
-	let listings = [];
+	type Listing = {
+		id: string;
+		owner_id: string;
+		title: string;
+		description: string;
+		sq_footage: number;
+		rooms: number;
+		monthly_price: number;
+		image_url: string;
+		location: string;
+		location_label: string;
+	};
+	let listings: Listing[] | undefined;
 
 	export let data;
 	const { user } = data;
+
+	supabase.from('apartments').select().eq('owner_id', user.id).then(({ data, error }) => {
+		if (error) {
+			console.error(error);
+			return;
+		}
+		listings = data;
+	});
 </script>
 
 <!-- 
@@ -32,11 +55,31 @@ Realtor Page
 	<h1 class="title">Your Listings</h1>
 	<p class="subtitle">View & manage your listings.</p>
 	<div class="listing-container">
-		{#if listings.length === 0}
+		{#if !listings}
+			<div class="empty-listing max-w-lg w-full mx-auto">
+				<ProgressBar />
+			</div>
+		{:else if listings.length === 0}
 			<div class="empty-listing">
 				<p class="text-center">You have no listings yet.</p>
 				<a href="/realtor/add" class="btn-base-orange filled pill">Add Listing</a>
 			</div>
+		{:else}
+			{#each listings as listing}
+				<div class="card">
+					<img src={getPreviewUrl(listing.owner_id)} alt={listing.name} />
+					<h2>{listing.title}</h2>
+					<p>{listing.description}</p>
+					<p>{listing.sq_footage} sq. ft.</p>
+					<p>{listing.rooms} rooms</p>
+					<p>${listing.monthly_price}/month</p>
+					<p>{listing.location_label}</p>
+					<div class="flex justify-between">
+						<a href="/realtor/edit/{listing.id}" class="btn-base-orange filled">Edit</a>
+						<button class="btn-base-red filled">Delete</button>
+					</div>
+				</div>
+			{/each}
 		{/if}
 	</div>
 </PageContainer>
