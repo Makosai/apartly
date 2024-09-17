@@ -3,6 +3,7 @@
 	import PageContainer from '$components/formats/PageContainer.svelte';
 	import { FileButton, getToastStore } from '@skeletonlabs/skeleton';
 	import Map, { type Selection } from '$components/map/Map.svelte';
+	import FloatingButton from '$components/formats/FloatingButton.svelte';
 
 	export let data;
 	const { supabase, user } = data;
@@ -137,7 +138,7 @@
 				formData.append('location', `POINT(${selection.y} ${selection.x})`);
 				formData.append('location_label', selection.label);
 			}
-			const data = Object.fromEntries(formData.entries());
+			const dataEntries = Object.fromEntries(formData.entries());
 
 			if (!validateForm(formData)) return;
 			if (!files || files.length <= 0) return; // Handled in validateForm, this just shuts up JS.
@@ -155,13 +156,21 @@
 				return;
 			}
 
+			let apartment_id = -1;
 			{
-				const { error, data } = await supabase.storage
-					.from('apartments_images')
-					.upload(`/${user.id}/preview`, file, {
-						cacheControl: '3600',
-						upsert: true
-					});
+				const { data, error } = await supabase
+					.from('apartments')
+					.insert({
+						owner_id: user.id,
+						title: dataEntries.title as string,
+						description: dataEntries.description as string,
+						sq_footage: Number(dataEntries.sq_footage as string),
+						rooms: Number(dataEntries.rooms as string),
+						monthly_price: Number(dataEntries.price_per_month as string),
+						location: dataEntries.location as string,
+						location_label: dataEntries.location_label as string
+					})
+					.select();
 
 				if (error) {
 					toast.trigger({
@@ -172,21 +181,17 @@
 					return;
 				}
 
-				if (data) {
-					console.log(data);
+				if (data && data.length > 0) {
+					apartment_id = data[0].id;
 				}
 			}
 
-			const { error } = await supabase.from('apartments').insert({
-				owner_id: user.id,
-				title: data.title as string,
-				description: data.description as string,
-				sq_footage: Number(data.sq_footage as string),
-				rooms: Number(data.rooms as string),
-				monthly_price: Number(data.price_per_month as string),
-				location: data.location as string,
-				location_label: data.location_label as string
-			});
+			const { error } = await supabase.storage
+				.from('apartments_images')
+				.upload(`/${user.id}/${apartment_id}/preview`, file, {
+					cacheControl: '3600',
+					upsert: true
+				});
 
 			if (error) {
 				toast.trigger({
@@ -194,15 +199,16 @@
 					timeout: 2000,
 					background: 'variant-filled-warning'
 				});
-			} else {
-				toast.trigger({
-					message: 'Listing added successfully!',
-					timeout: 2000,
-					background: 'variant-filled-success'
-				});
-
-				goto('/realtor');
+				return;
 			}
+
+			toast.trigger({
+				message: 'Listing added successfully!',
+				timeout: 2000,
+				background: 'variant-filled-success'
+			});
+
+			goto('/realtor');
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -219,7 +225,6 @@
 		<form
 			class="form-container"
 			on:submit|preventDefault={submitForm}
-			on:invalid={() => console.log('hi')}
 		>
 			<div class="form-group">
 				<label for="title">Title</label>
