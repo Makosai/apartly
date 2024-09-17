@@ -10,6 +10,108 @@
 	const toast = getToastStore();
 
 	let files: FileList | undefined;
+	let location: string | undefined = '';
+
+	function validateForm(formData: FormData): boolean {
+		const title = formData.get('title') as string;
+		const description = formData.get('description') as string;
+		const sq_footage = formData.get('sq_footage') as string;
+		const rooms = formData.get('rooms') as string;
+		const price_per_month = formData.get('price_per_month') as string;
+		const location = formData.get('location') as string;
+
+		if(!files || files.length === 0) {
+			toast.trigger({
+				message: 'Please upload a preview image.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(!title) {
+			toast.trigger({
+				message: 'Please enter a title.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(!description || description.length === 0) {
+			toast.trigger({
+				message: 'Please enter a description.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(!sq_footage) {
+			toast.trigger({
+				message: 'Please enter the square footage.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(isNaN(Number(sq_footage))) {
+			toast.trigger({
+				message: 'Square footage must be a number.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(!rooms) {
+			toast.trigger({
+				message: 'Please enter the number of rooms.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(isNaN(Number(rooms))) {
+			toast.trigger({
+				message: 'Number of rooms must be a number.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(!price_per_month) {
+			toast.trigger({
+				message: 'Please enter the price per month.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(isNaN(Number(price_per_month))) {
+			toast.trigger({
+				message: 'Price per month must be a number.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if(!location) {
+			toast.trigger({
+				message: 'Please select a location.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		return true;
+	}
 
 	async function submitForm(e: Event) {
 		e.preventDefault();
@@ -18,7 +120,12 @@
 
 		const form = e.target as HTMLFormElement;
 		const formData = new FormData(form);
+		if(location) formData.append('location', location);
 		const data = Object.fromEntries(formData.entries());
+		console.log(data.sq_footage);
+
+		if(!validateForm(formData)) return;
+
 
 		// supabase.storage.from('apartments_images').upload(`/${user.id}/${files[0].name}`, files[0]);
 
@@ -59,22 +166,22 @@
 		>
 			<div class="form-group">
 				<label for="title">Title</label>
-				<input type="text" id="title" required />
+				<input type="text" id="title" name="title" required />
 			</div>
 
 			<div class="form-group md:col-span-2">
 				<label for="description">Description</label>
-				<textarea id="description" required></textarea>
+				<textarea id="description" name="description" required></textarea>
 			</div>
 
 			<div class="form-group">
 				<label for="sq-footage">Square Footage</label>
-				<input type="number" id="sq-footage" placeholder="5" step="1" required pattern="[0-9]+" /> sq/ft
+				<input type="number" id="sq-footage" name="sq_footage" placeholder="5" step="1" required pattern="[0-9]+" /> sq/ft
 			</div>
 
 			<div class="form-group">
 				<label for="rooms">Number of Rooms</label>
-				<input type="number" id="rooms" placeholder="5" step="1" required pattern="[0-9]+" /> rooms
+				<input type="number" id="rooms" name="rooms" placeholder="5" step="1" required pattern="[0-9]+" /> rooms
 			</div>
 
 			<div class="form-group">
@@ -82,6 +189,7 @@
 				$<input
 					type="number"
 					id="price-per-month"
+					name="price_per_month"
 					placeholder="800.00"
 					step="0.01"
 					required
@@ -108,7 +216,7 @@
 			<div class="form-group md:col-span-2">
 				<label for="location">Location</label>
 				<div class="w-full h-[300px]">
-					<Map />
+					<Map  />
 				</div>
 			</div>
 
@@ -117,6 +225,8 @@
 			</div>
 		</form>
 	</div>
+
+	{location}
 </PageContainer>
 
 <style lang="postcss">
