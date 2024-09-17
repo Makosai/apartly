@@ -3,6 +3,9 @@ create schema if not exists "gis";
 create extension if not exists postgis with schema "gis";
 set search_path to public, gis;
 
+grant usage on schema "gis" to anon;
+grant usage on schema "gis" to authenticated;
+
 -- Create the enum type for account types.
 create type acc_type as enum('none', 'realtor', 'user');
 
@@ -17,8 +20,23 @@ values
     5242880
   );
 
-create policy "user_apartment_images_policy"
+create policy "user_apartment_images_policy_select"
+on storage.objects for select
+to authenticated
+using (bucket_id = 'apartments_images'::text);
+
+create policy "user_apartment_images_policy_insert"
 on storage.objects for insert
+to authenticated
+with check (
+  bucket_id = 'apartments_images'::text
+  and (
+    (select (auth.uid())::text as uid) = (storage.foldername(name))[1]
+  )
+);
+
+create policy "user_apartment_images_policy_update"
+on storage.objects for update
 to authenticated
 with check (
   bucket_id = 'apartments_images'::text
