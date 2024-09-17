@@ -38,6 +38,12 @@ with check (
 create policy "user_apartment_images_policy_update"
 on storage.objects for update
 to authenticated
+using (
+  bucket_id = 'apartments_images'::text
+  and (
+    (select (auth.uid())::text as uid) = (storage.foldername(name))[1]
+  )
+)
 with check (
   bucket_id = 'apartments_images'::text
   and (
@@ -171,7 +177,7 @@ with check ((select auth.uid()) = owner_id);
 -- Everyone can read the apartments list.
 create policy "apartment_read_policy"
 on apartments for select
-to anon
+to anon, authenticated
 using (true);
 
 -- Update the apartment listing if you're the owner.
@@ -182,11 +188,11 @@ to authenticated
 using ((select auth.uid()) = owner_id)
 with check ((select auth.uid()) = owner_id);
 
--- Delete the apartment if you own the listing.
+-- Delete the apartment of you own the listing.
 create policy "apartment_delete_policy"
 on apartments for delete
 to authenticated
-using (false);
+using ((select auth.uid()) = owner_id);
 
 
 
