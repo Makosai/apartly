@@ -1,16 +1,18 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import PageContainer from '$components/formats/PageContainer.svelte';
 	import { supabase } from '$lib/supabaseClient';
 	import { FileButton, getToastStore } from '@skeletonlabs/skeleton';
-	import Map from '$components/map/Map.svelte';
+	import Map, { type Selection } from '$components/map/Map.svelte';
 
 	export let data;
 	const { user } = data;
 
+	let selection: Selection | undefined;
+
 	const toast = getToastStore();
 
 	let files: FileList | undefined;
-	let location: string | undefined = '';
 
 	function validateForm(formData: FormData): boolean {
 		const title = formData.get('title') as string;
@@ -19,8 +21,9 @@
 		const rooms = formData.get('rooms') as string;
 		const price_per_month = formData.get('price_per_month') as string;
 		const location = formData.get('location') as string;
+		const location_label = formData.get('location_label') as string;
 
-		if(!files || files.length === 0) {
+		if (!files || files.length === 0) {
 			toast.trigger({
 				message: 'Please upload a preview image.',
 				timeout: 2000,
@@ -29,7 +32,7 @@
 			return false;
 		}
 
-		if(!title) {
+		if (!title) {
 			toast.trigger({
 				message: 'Please enter a title.',
 				timeout: 2000,
@@ -38,7 +41,7 @@
 			return false;
 		}
 
-		if(!description || description.length === 0) {
+		if (!description || description.length === 0) {
 			toast.trigger({
 				message: 'Please enter a description.',
 				timeout: 2000,
@@ -47,7 +50,7 @@
 			return false;
 		}
 
-		if(!sq_footage) {
+		if (!sq_footage) {
 			toast.trigger({
 				message: 'Please enter the square footage.',
 				timeout: 2000,
@@ -56,7 +59,7 @@
 			return false;
 		}
 
-		if(isNaN(Number(sq_footage))) {
+		if (isNaN(Number(sq_footage))) {
 			toast.trigger({
 				message: 'Square footage must be a number.',
 				timeout: 2000,
@@ -65,7 +68,7 @@
 			return false;
 		}
 
-		if(!rooms) {
+		if (!rooms) {
 			toast.trigger({
 				message: 'Please enter the number of rooms.',
 				timeout: 2000,
@@ -74,7 +77,7 @@
 			return false;
 		}
 
-		if(isNaN(Number(rooms))) {
+		if (isNaN(Number(rooms))) {
 			toast.trigger({
 				message: 'Number of rooms must be a number.',
 				timeout: 2000,
@@ -83,7 +86,7 @@
 			return false;
 		}
 
-		if(!price_per_month) {
+		if (!price_per_month) {
 			toast.trigger({
 				message: 'Please enter the price per month.',
 				timeout: 2000,
@@ -92,7 +95,7 @@
 			return false;
 		}
 
-		if(isNaN(Number(price_per_month))) {
+		if (isNaN(Number(price_per_month))) {
 			toast.trigger({
 				message: 'Price per month must be a number.',
 				timeout: 2000,
@@ -101,7 +104,16 @@
 			return false;
 		}
 
-		if(!location) {
+		if (!location) {
+			toast.trigger({
+				message: 'Please select a location.',
+				timeout: 2000,
+				background: 'variant-filled-warning'
+			});
+			return false;
+		}
+
+		if (!location_label) {
 			toast.trigger({
 				message: 'Please select a location.',
 				timeout: 2000,
@@ -116,26 +128,48 @@
 	async function submitForm(e: Event) {
 		e.preventDefault();
 
-		if(!user) return; // The should be set anyways. This page redirects them automatically if not.
+		if (!user) return; // The should be set anyways. This page redirects them automatically if not.
 
 		const form = e.target as HTMLFormElement;
 		const formData = new FormData(form);
-		if(location) formData.append('location', location);
+		if (selection) {
+			formData.append('location', `POINT(${selection.y} ${selection.x})`);
+			formData.append('location_label', selection.label);
+		}
 		const data = Object.fromEntries(formData.entries());
 		console.log(data.sq_footage);
 
-		if(!validateForm(formData)) return;
+		if (!validateForm(formData)) return;
+		if (!files || files.length > 0) return; // Handled in validateForm, this just shuts up JS.
 
+		{
+			const { error, data } = await supabase.storage
+				.from('apartments_images')
+				.upload(`/${user.id}/preview`, files[0]);
 
-		// supabase.storage.from('apartments_images').upload(`/${user.id}/${files[0].name}`, files[0]);
+			if (error) {
+				toast.trigger({
+					message: error.message,
+					timeout: 2000,
+					background: 'variant-filled-warning'
+				});
+				return;
+			}
+
+			if (data) {
+				console.log(data);
+			}
+		}
 
 		const { error } = await supabase.from('apartments').insert({
+			owner_id: user.id,
 			title: data.title,
 			description: data.description,
 			sq_footage: data.sq_footage,
 			rooms: data.rooms,
-			price_per_month: data.price_per_month,
-			location: data.location
+			monthly_price: data.price_per_month,
+			location: data.location,
+			location_label: data.location_label
 		});
 
 		if (error) {
@@ -150,6 +184,8 @@
 				timeout: 2000,
 				background: 'variant-filled-success'
 			});
+
+			goto('/realtor');
 		}
 	}
 </script>
@@ -176,12 +212,28 @@
 
 			<div class="form-group">
 				<label for="sq-footage">Square Footage</label>
-				<input type="number" id="sq-footage" name="sq_footage" placeholder="5" step="1" required pattern="[0-9]+" /> sq/ft
+				<input
+					type="number"
+					id="sq-footage"
+					name="sq_footage"
+					placeholder="5"
+					step="1"
+					required
+					pattern="[0-9]+"
+				/> sq/ft
 			</div>
 
 			<div class="form-group">
 				<label for="rooms">Number of Rooms</label>
-				<input type="number" id="rooms" name="rooms" placeholder="5" step="1" required pattern="[0-9]+" /> rooms
+				<input
+					type="number"
+					id="rooms"
+					name="rooms"
+					placeholder="5"
+					step="1"
+					required
+					pattern="[0-9]+"
+				/> rooms
 			</div>
 
 			<div class="form-group">
@@ -193,7 +245,8 @@
 					placeholder="800.00"
 					step="0.01"
 					required
-					pattern=/(?:^[1-9]([0-9]+)?(?:\.[0-9]\{1,2})?$)|(?:^(?:0)$)|(?:^[0-9]\.[0-9](?:[0-9])?$)/
+					pattern="/(?:^[1-9]([0-9]+)?(?:\.[0-9]\{(1,
+					2)})?$)|(?:^(?:0)$)|(?:^[0-9]\.[0-9](?:[0-9])?$)/"
 				/> USD
 			</div>
 
@@ -210,13 +263,15 @@
 						/>
 					</p>
 				{/if}
-				<FileButton id="preview-image-url" name="preview_image_url" bind:files required />
+				<FileButton id="preview-image-url" name="preview_image_url" bind:files />
 			</div>
 
 			<div class="form-group md:col-span-2">
 				<label for="location">Location</label>
+				<p>Search for a location on the map below.</p>
+				<p>{selection?.label ?? ''}</p>
 				<div class="w-full h-[300px]">
-					<Map  />
+					<Map bind:selection />
 				</div>
 			</div>
 
@@ -225,8 +280,6 @@
 			</div>
 		</form>
 	</div>
-
-	{location}
 </PageContainer>
 
 <style lang="postcss">

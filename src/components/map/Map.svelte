@@ -1,14 +1,21 @@
+<script context="module" lang="ts">
+	export type Selection = {
+		bounds: [
+			[lat: number, lng: number],
+			[lat: number, lng: number]
+		],
+		label: string,
+		raw: any,
+		x: number,
+		y: number
+	};
+</script>
+
 <script lang="ts">
 	import type { OpenStreetMapProvider } from 'leaflet-geosearch';
 	import type { Map, LatLngTuple, Marker } from 'leaflet';
 	import { onMount } from 'svelte';
 	import type * as Leaflet from 'leaflet';
-	import type { SearchResult } from 'leaflet-geosearch/dist/providers/provider.js';
-
-	type Selection = {
-		query: string;
-		data?: SearchResult;
-	};
 
 	type MarkerDict = { [key: string]: Marker };
 	const markers: MarkerDict = {};
@@ -21,6 +28,8 @@
 	let tileLayerURL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 	let provider: OpenStreetMapProvider;
 	let L: typeof Leaflet;
+
+	export let selection: Selection | undefined;
 
 	onMount(async () => {
 		await Promise.all([
@@ -40,52 +49,21 @@
 		provider = new OpenStreetMapProvider();
 		const gsc = GeoSearchControl({
 			provider,
-			style: 'width: 100%',
-			autoComplete: true,
-			searchLabel: 'Search for a location',
-			onSubmit: search
+			style: 'bar',
+			searchLabel: 'Search for a location'
 		});
-		document.getElementById('map-search')?.appendChild(gsc.searchElement.container);
-		gsc.open();
+		gsc.addTo(map);
+
+		map.on('geosearch/showlocation', (e) => {
+			// @ts-ignore
+			if(Object.hasOwn(e, 'location')) selection = e.location;
+		});
 
 		navigator.geolocation.getCurrentPosition((position) => {
 			mapOptions.center = [position.coords.latitude, position.coords.longitude];
 			map.setView(mapOptions.center as LatLngTuple, mapOptions.zoom);
 		});
 	});
-
-	function search(result: Selection) {
-		if (!result.data) return;
-		const { x, y } = result.data;
-		const latlng = [y, x];
-		if (search_marker) {
-			map.removeLayer(search_marker);
-		}
-		search_marker = L.marker(latlng as LatLngTuple).addTo(map);
-		map.setView(latlng as LatLngTuple, 13);
-	}
 </script>
 
-<div id="map-search" class="w-full pb-4" />
 <div id="map" class="h-[calc(100%-50px)] w-full rounded-xl"></div>
-
-<style lang="postcss">
-	#map-search {
-		@apply relative h-10 mb-4;
-	}
-	#map-search :global(a), #map-search :global(button) {
-		@apply hidden;
-	}
-	#map-search :global(.geosearch) {
-		@apply absolute w-full h-10;
-	}
-
-	#map-search :global(input.glass) {
-		@apply w-full h-10 outline-none text-base !rounded-lg;
-		box-shadow: none;
-	}
-
-	#map-search :global(form) {
-		@apply left-0 relative z-50 p-0 !rounded-lg;
-	}
-</style>
