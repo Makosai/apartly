@@ -7,12 +7,11 @@
 	import { onMount } from 'svelte';
 	import { pageTitle } from '$lib/stores';
 	import { invalidate } from '$app/navigation';
-	import { supabase } from '$lib/supabaseClient';
 
 	initializeStores();
 
 	export let data;
-	const { session } = data;
+	const { supabase, session } = data;
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
