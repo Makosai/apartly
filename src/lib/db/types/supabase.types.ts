@@ -108,10 +108,16 @@ export type Database = {
         }
         Returns: {
           id: number
+          owner_id: string
           title: string
+          description: string
+          sq_footage: number
+          rooms: number
+          monthly_price: number
           lat: number
           long: number
           dist_meters: number
+          location_label: string
         }[]
       }
     }
