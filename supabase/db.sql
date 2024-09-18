@@ -142,15 +142,29 @@ using GIST (location);
 -- Distance sorting function used with .rpc() on client.
 create or replace
 function nearby_apartments(lat float, long float)
-returns table (id public.apartments.id%TYPE, title public.apartments.title%TYPE, lat float, long float, dist_meters float)
+returns table (
+  id public.apartments.id%TYPE,
+  title public.apartments.title%TYPE,
+  description public.apartments.description%TYPE,
+  sq_footage public.apartments.sq_footage%TYPE,
+  rooms public.apartments.rooms%TYPE,
+  monthly_price public.apartments.monthly_price%TYPE,
+  lat float, long float, dist_meters float,
+  location_label public.apartments.location_label%TYPE
+  )
 language sql set search_path to public, gis
 as $$
   select
     id,
     title,
+    description,
+    sq_footage,
+    rooms,
+    monthly_price,
     gis.st_y(location::geometry) as lat,
     gis.st_x(location::geometry) as long,
-    st_distance(location, gis.st_point(long, lat)::geography) as dist_meters
+    st_distance(location, gis.st_point(long, lat)::geography) as dist_meters,
+    location_label
   from public.apartments
   order by location <-> gis.st_point(long, lat)::gis.geography;
 $$;
