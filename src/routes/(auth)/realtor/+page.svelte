@@ -2,9 +2,11 @@
 	import FloatingButton from '$components/formats/FloatingButton.svelte';
 	import Listing from '$components/formats/Listing.svelte';
 	import PageContainer from '$components/formats/PageContainer.svelte';
-	import { ProgressBar } from '@skeletonlabs/skeleton';
+	import { ProgressBar, getToastStore } from '@skeletonlabs/skeleton';
 
-	let listings: ListingData[] | undefined;
+	$: listings = undefined as ListingData[] | undefined;
+
+	const toast = getToastStore();
 
 	export let data;
 	const { supabase, user } = data;
@@ -48,27 +50,39 @@ Realtor Page
 <PageContainer>
 	<h1 class="title">Your Listings</h1>
 	<p class="subtitle">View & manage your listings.</p>
-	<div class="listing-container">
-		{#if !listings}
-			<div class="empty-listing max-w-lg w-full mx-auto">
-				<ProgressBar />
-			</div>
-		{:else if listings.length === 0}
-			<div class="empty-listing">
-				<p class="text-center">You have no listings yet.</p>
-				<a href="/realtor/add" class="btn-base-orange filled pill">Add Listing</a>
-			</div>
-		{:else}
-			{#each listings as listing}
-				<Listing {listing} />
-			{/each}
-		{/if}
+	<div class="flex justify-center">
+		<div class="listing-container">
+			{#if !listings}
+				<div class="empty-listing max-w-lg w-full mx-auto">
+					<ProgressBar />
+				</div>
+			{:else if listings.length === 0}
+				<div class="empty-listing">
+					<p class="text-center">You have no listings yet.</p>
+					<a href="/realtor/add" class="btn-base-orange filled pill">Add Listing</a>
+				</div>
+			{:else}
+				{#each listings as listing, i}
+					<Listing
+						{listing}
+						{supabase}
+						{toast}
+						destroy={() => {
+							if (listings) {
+								listings.splice(i, 1);
+								listings = listings;
+							}
+						}}
+					/>
+				{/each}
+			{/if}
+		</div>
 	</div>
 </PageContainer>
 
 <style lang="postcss">
 	.listing-container {
-		@apply grid grid-cols-2 gap-4;
+		@apply grid grid-cols-2 gap-4 mt-6;
 	}
 	.empty-listing {
 		@apply col-span-2 flex flex-col justify-center items-center gap-4 min-h-[calc(100vh-300px)];
