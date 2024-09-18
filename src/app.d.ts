@@ -40,6 +40,19 @@ declare global {
 		currentTarget: EventTarget & HTMLSelectElement;
 	};
 
+	type NearbyListingData = {
+		id: number;
+		owner_id: string;
+		title: string;
+		description: string;
+		sq_footage: number;
+		rooms: number;
+		monthly_price: number;
+		lat: number;
+		long: number;
+		location_label: string;
+	}
+
 	type ListingData = {
 		id: number;
 		owner_id: string;
