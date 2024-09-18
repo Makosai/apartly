@@ -1,14 +1,22 @@
 .btn-base-orange {
   @apply btn inline-block px-6 py-3 text-[--base-orange] border-2 border-[--base-orange] rounded-xl shadow-md font-medium;
 }
-
-.btn-base-orange.pill {
+.btn-base-orange.pill, .btn-error.pill {
   @apply rounded-3xl py-[9px] px-5 font-normal;
 }
-
 .btn-base-orange.filled {
   @apply text-white bg-gray-900 border-none;
 }
 .btn-base-orange.filled:hover {
   @apply bg-[--base-orange-highlight];
+}
+
+.btn-error {
+  @apply btn inline-block px-6 py-3 text-red-500 border-2 border-red-500 rounded-xl shadow-md font-medium;
+}
+.btn-error:hover {
+  @apply bg-red-500 text-white;
+}
+.btn-error.filled {
+  @apply text-white bg-red-500 border-none;
 }
