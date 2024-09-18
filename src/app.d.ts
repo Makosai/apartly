@@ -8,6 +8,7 @@ declare namespace App {
 	// interface Platform {}
 }
 
+import type Listing from '$components/formats/Listing.svelte';
 import type { Database } from '$lib/db/types/supabase.types';
 //#region Supabase
 import type { SupabaseClient, Session, User } from '@supabase/supabase-js';
@@ -15,7 +16,7 @@ import type { SupabaseClient, Session, User } from '@supabase/supabase-js';
 declare global {
 	namespace App {
 		interface Locals {
-			supabase: SupabaseClient;
+			supabase: SupabaseClient<Database>;
 			safeGetSession(): Promise<{ session: Session | null; user: User | null }>;
 		}
 		interface PageData {
