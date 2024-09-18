@@ -22,7 +22,7 @@
 	let search_marker: Marker;
 	let map: Map;
 	let mapOptions = {
-		center: [51.505, -0.09],
+		center: [43.505, -73.09],
 		zoom: 13
 	};
 	let tileLayerURL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
