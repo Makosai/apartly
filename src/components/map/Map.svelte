@@ -1,13 +1,10 @@
 <script context="module" lang="ts">
 	export type Selection = {
-		bounds: [
-			[lat: number, lng: number],
-			[lat: number, lng: number]
-		],
-		label: string,
-		raw: any,
-		x: number,
-		y: number
+		bounds: [[lat: number, lng: number], [lat: number, lng: number]];
+		label: string;
+		raw: any;
+		x: number;
+		y: number;
 	};
 </script>
 
@@ -16,20 +13,21 @@
 	import type { Map, LatLngTuple, Marker } from 'leaflet';
 	import { onMount } from 'svelte';
 	import type * as Leaflet from 'leaflet';
+	import type { Writable } from 'svelte/store';
 
 	type MarkerDict = { [key: string]: Marker };
 	const markers: MarkerDict = {};
 	let search_marker: Marker;
 	let map: Map;
 	let mapOptions = {
-		center: [43.505, -73.09],
+		center: [40.727611, -73.841805],
 		zoom: 13
 	};
 	let tileLayerURL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 	let provider: OpenStreetMapProvider;
 	let L: typeof Leaflet;
 
-	export let selection: Selection | undefined;
+	export let selection: Writable<Selection | undefined> | Selection | undefined;
 
 	onMount(async () => {
 		await Promise.all([
@@ -55,8 +53,16 @@
 		gsc.addTo(map);
 
 		map.on('geosearch/showlocation', (e) => {
-			// @ts-ignore
-			if(Object.hasOwn(e, 'location')) selection = e.location;
+			if (Object.hasOwn(e, 'location')) {
+				// @ts-ignore
+				const loc = e.location;
+
+				if (selection && 'set' in selection) {
+					selection.set(loc);
+				} else {
+					selection = loc;
+				}
+			}
 		});
 
 		navigator.geolocation.getCurrentPosition((position) => {
@@ -66,4 +72,4 @@
 	});
 </script>
 
-<div id="map" class="h-[calc(100%-50px)] w-full rounded-xl"></div>
+<div id="map" class="h-[calc(100%-50px)] w-full rounded-xl z-[2]"></div>

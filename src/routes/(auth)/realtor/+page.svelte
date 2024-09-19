@@ -82,7 +82,7 @@ Realtor Page
 
 <style lang="postcss">
 	.listing-container {
-		@apply grid grid-cols-2 gap-4 mt-6;
+		@apply grid grid-cols-1 md:grid-cols-2 gap-4 mt-6;
 	}
 	.empty-listing {
 		@apply col-span-2 flex flex-col justify-center items-center gap-4 min-h-[calc(100vh-300px)];

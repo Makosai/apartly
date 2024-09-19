@@ -109,6 +109,8 @@ export type Database = {
         Returns: {
           id: number
           owner_id: string
+          first_name: string
+          last_name: string
           title: string
           description: string
           sq_footage: number

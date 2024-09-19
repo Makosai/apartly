@@ -8,7 +8,6 @@ declare namespace App {
 	// interface Platform {}
 }
 
-import type Listing from '$components/formats/Listing.svelte';
 import type { Database } from '$lib/db/types/supabase.types';
 //#region Supabase
 import type { SupabaseClient, Session, User } from '@supabase/supabase-js';
@@ -43,6 +42,8 @@ declare global {
 	type NearbyListingData = {
 		id: number;
 		owner_id: string;
+		first_name: string;
+		last_name: string;
 		title: string;
 		description: string;
 		sq_footage: number;
@@ -50,6 +51,7 @@ declare global {
 		monthly_price: number;
 		lat: number;
 		long: number;
+		dist_meters: number;
 		location_label: string;
 	}
 
