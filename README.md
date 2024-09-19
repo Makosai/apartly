@@ -33,3 +33,7 @@ npm run supa:link && npm run supa:gen
 ```
 
 But that should already be up to date and committed.
+
+## Extra
+
+If you need to reverse from lat/long, you can fetch this API: `https://nominatim.openstreetmap.org/reverse?lat=43.5&lon=-73.5&format=jsonv2` or use an existing package.
