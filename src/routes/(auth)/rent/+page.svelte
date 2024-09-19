@@ -26,6 +26,7 @@
 	let max_price: number | undefined = undefined;
 	let min_rooms: number | undefined = undefined;
 	let max_rooms: number | undefined = undefined;
+	let max_miles: number | undefined = undefined;
 	let limit: number | undefined = undefined;
 
 	getNearbyApartments();
@@ -40,6 +41,8 @@
 
 		if (min_rooms) query.gte('rooms', min_rooms);
 		if (max_rooms) query.lte('rooms', max_rooms);
+
+		if (max_miles) query.lte('dist_meters', max_miles * 1609.34);
 
 		const { data, error } = await query.limit(limit || 10);
 
@@ -105,8 +108,11 @@
 				</div>
 
 				<div class="flex flex-col form-group">
-					<p>Limit</p>
-					<input type="number" bind:value={limit} placeholder="Limit" class="w-20" />
+					<p>Max Miles & Limit</p>
+					<div class="flex justify-start form-group">
+						<input type="number" bind:value={max_miles} placeholder="Distance" class="w-20" />
+						<input type="number" bind:value={limit} placeholder="Limit" class="w-20" />
+					</div>
 				</div>
 				<button class="btn-base-orange filled pill" on:click={() => getNearbyApartments()}
 					>Search</button
