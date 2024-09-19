@@ -2,7 +2,11 @@
 	import FloatingButton from '$components/formats/FloatingButton.svelte';
 	import Listing from '$components/formats/Listing.svelte';
 	import PageContainer from '$components/formats/PageContainer.svelte';
+	import { sitename } from '$lib/info';
+	import { pageTitle } from '$lib/stores';
 	import { ProgressBar, getToastStore } from '@skeletonlabs/skeleton';
+
+	$pageTitle = `${sitename} - Realtor`;
 
 	$: listings = undefined as ListingData[] | undefined;
 

@@ -3,6 +3,10 @@
 	import PageContainer from '$components/formats/PageContainer.svelte';
 	import { FileButton, getToastStore } from '@skeletonlabs/skeleton';
 	import Map, { type Selection } from '$components/map/Map.svelte';
+	import { sitename } from '$lib/info';
+	import { pageTitle } from '$lib/stores';
+
+	$pageTitle = `${sitename} - Realtor`;
 
 	export let data;
 	const { supabase, user } = data;

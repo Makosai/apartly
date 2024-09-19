@@ -1,5 +1,9 @@
 <script lang="ts">
+	import { sitename } from '$lib/info';
+	import { pageTitle } from '$lib/stores';
 	import Data from './data/AllData';
+
+	$pageTitle = `${sitename} - Realtor`;
 </script>
 
 <h1>Changelog</h1>

@@ -3,9 +3,13 @@
 	import NearbyListing from '$components/formats/NearbyListing.svelte';
 	import PageContainer from '$components/formats/PageContainer.svelte';
 	import Map, { type Selection } from '$components/map/Map.svelte';
+	import { sitename } from '$lib/info';
+	import { pageTitle } from '$lib/stores';
 	import { ProgressBar, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
+
+	$pageTitle = `${sitename} - Rent`;
 
 	$: listings = undefined as NearbyListingData[] | undefined;
 

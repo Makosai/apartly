@@ -79,12 +79,12 @@ function check_account_type_change ()
 returns trigger set search_path = '' as $$
 begin
     -- Allow changing from 'none' to any other account type.
-    if old.account_type = acc_type.none then
+    if old.account_type = 'none'::public.acc_type then
         return new;
     end if;
 
     -- Deny changing to any other account type if current_type is not 'none'.
-    if old.account_type <> acc_type.none and new.account_type <> old.account_type then
+    if old.account_type <> 'none'::public.acc_type and new.account_type <> old.account_type then
         raise exception 'Cannot change account_type once it is set to a value other than none.';
     end if;
 
