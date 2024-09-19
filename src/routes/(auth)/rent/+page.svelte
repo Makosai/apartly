@@ -4,11 +4,13 @@
 	import PageContainer from '$components/formats/PageContainer.svelte';
 	import Map, { type Selection } from '$components/map/Map.svelte';
 	import { ProgressBar, getToastStore } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 
 	$: listings = undefined as NearbyListingData[] | undefined;
 
 	const toast = getToastStore();
+	let mapComp: Map;
 
 	export let data;
 	const { supabase } = data;
@@ -30,29 +32,35 @@
 	async function getNearbyApartments(long = 40.727611, lat = -73.841805) {
 		const query = supabase.rpc('nearby_apartments', { lat, long });
 
-    if (min_sq_footage) query.gte('sq_footage', min_sq_footage);
-    if (max_sq_footage) query.lte('sq_footage', max_sq_footage);
+		if (min_sq_footage) query.gte('sq_footage', min_sq_footage);
+		if (max_sq_footage) query.lte('sq_footage', max_sq_footage);
 
-    if (min_price) query.gte('monthly_price', min_price);
-    if (max_price) query.lte('monthly_price', max_price);
+		if (min_price) query.gte('monthly_price', min_price);
+		if (max_price) query.lte('monthly_price', max_price);
 
-    if (min_rooms) query.gte('rooms', min_rooms);
-    if (max_rooms) query.lte('rooms', max_rooms);
+		if (min_rooms) query.gte('rooms', min_rooms);
+		if (max_rooms) query.lte('rooms', max_rooms);
 
-    const { data, error } = await query.limit(limit || 10);
+		const { data, error } = await query.limit(limit || 10);
 
-    if(error) {
-      console.error(error);
-      return;
-    }
+		if (error) {
+			console.error(error);
+			return;
+		}
 
-    if(!data) {
-      listings = [];
-      return;
-    }
+		if (!data) {
+			listings = [];
+		} else {
+			listings = data;
+		}
 
-    listings = data;
+		if (!mapComp) return;
+		mapComp.setMarkers(listings);
 	}
+
+	onMount(() => {
+		if (listings && mapComp) mapComp.setMarkers(listings);
+	});
 </script>
 
 <FloatingButton href="/realtor/add" />
@@ -68,7 +76,7 @@
 	</p>
 	<div class="flex justify-center items-center flex-col">
 		<div class="h-[600px] w-full">
-			<Map selection={selectionState} />
+			<Map selection={selectionState} bind:this={mapComp} />
 		</div>
 		<div class="w-full flex flex-col justify-center items-center">
 			<div class="grid grid-cols-2 gap-3">
@@ -100,7 +108,9 @@
 					<p>Limit</p>
 					<input type="number" bind:value={limit} placeholder="Limit" class="w-20" />
 				</div>
-				<button class="btn-base-orange filled pill" on:click={() => getNearbyApartments()}>Search</button>
+				<button class="btn-base-orange filled pill" on:click={() => getNearbyApartments()}
+					>Search</button
+				>
 			</div>
 			<div class="listing-container">
 				{#if !listings}

@@ -9,14 +9,21 @@
 </script>
 
 <script lang="ts">
+	import 'leaflet/dist/images/layers-2x.png';
+	import 'leaflet/dist/images/layers.png';
+	import 'leaflet/dist/images/marker-icon-2x.png';
+	import 'leaflet/dist/images/marker-icon.png';
+	import 'leaflet/dist/images/marker-shadow.png';
+	import 'leaflet/dist/leaflet.css';
+	import 'leaflet-geosearch/dist/geosearch.css';
+
 	import type { OpenStreetMapProvider } from 'leaflet-geosearch';
 	import type { Map, LatLngTuple, Marker } from 'leaflet';
 	import { onMount } from 'svelte';
 	import type * as Leaflet from 'leaflet';
 	import type { Writable } from 'svelte/store';
 
-	type MarkerDict = { [key: string]: Marker };
-	const markers: MarkerDict = {};
+	let all_markers: Marker[] = [];
 	let search_marker: Marker;
 	let map: Map;
 	let mapOptions = {
@@ -27,15 +34,23 @@
 	let provider: OpenStreetMapProvider;
 	let L: typeof Leaflet;
 
+	export function setMarkers(nearbyListing: NearbyListingData[]) {
+		console.log("test");
+		all_markers.forEach((marker) => {
+			map.removeLayer(marker);
+		});
+
+		nearbyListing.forEach((elem) => {
+			const marker = L.marker([elem.long, elem.lat]).addTo(map);
+			marker.bindPopup(`<b>${elem.title}</b><br>${elem.location_label}`);
+			all_markers.push(marker);
+		});
+	}
+
 	export let selection: Writable<Selection | undefined> | Selection | undefined;
 
 	onMount(async () => {
-		await Promise.all([
-			await import('leaflet/dist/leaflet.css'),
-			await import('leaflet-geosearch/dist/geosearch.css')
-		]);
-
-		const L = await import('leaflet');
+		L = await import('leaflet');
 		const { GeoSearchControl, OpenStreetMapProvider } = await import('leaflet-geosearch');
 
 		map = L.map('map').setView(mapOptions.center as LatLngTuple, mapOptions.zoom);
